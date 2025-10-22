@@ -1,0 +1,5 @@
+{
+  "name": "77777 Slot Machine",
+  "description": "React와 Tailwind CSS로 제작된 5개의 릴이 있는 화려한 슬롯머신 게임입니다. 숫자를 맞춰 승리하고, 77777로 대상에 도전하세요.",
+  "requestFramePermissions": []
+}

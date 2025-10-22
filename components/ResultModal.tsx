@@ -56,7 +56,7 @@ const ResultModal: React.FC<ResultModalProps> = ({ result, onClose }) => {
           onClick={onClose}
           className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-6 sm:py-3 sm:px-8 rounded-full transition-colors duration-300 text-base sm:text-lg"
         >
-          다시하기
+          이어하기
         </button>
       </div>
     </div>

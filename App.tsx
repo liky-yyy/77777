@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import Reel from './components/Reel';
 import Lever from './components/Lever';
@@ -6,7 +5,7 @@ import ResultModal from './components/ResultModal';
 import type { GameResult, Rank } from './types';
 
 const REEL_COUNT = 5;
-const REEL_TRANSITION_MS = 3000;
+const REEL_TRANSITION_MS = 2000; // Reduced for a faster feel
 const REEL_STOP_DELAY_MS = 300;
 
 const PRIZE_MONEY: { [key in Rank]: number } = {
@@ -34,26 +33,22 @@ const App: React.FC = () => {
     const maxCount = Math.max(...values);
 
     let rank: Rank | null = null;
-    let message = "다음 기회에!";
 
     if (maxCount === 5) {
       if (finalReels.every(n => n === 7)) {
         rank = 1;
-        message = "믿을 수 없어요! 77777 잭팟에 당첨되었습니다!";
       } else {
         rank = 2;
-        message = "굉장해요! 파이브 오브 어 카인드!";
       }
     } else if (maxCount === 4) {
       rank = 3;
-      message = "훌륭해요! 포 오브 어 카인드!";
     } else if (maxCount === 3) {
       rank = 4;
-      message = "좋아요! 쓰리 오브 어 카인드!";
     }
     
     if (rank) {
       const prize = PRIZE_MONEY[rank];
+      const message = `축하합니다! ${prize.toLocaleString()}원이 적립되었습니다!`;
       setPoints(prevPoints => prevPoints + prize);
       setTimeout(() => {
         setResult({ rank, message, numbers: finalReels, prize });
@@ -89,12 +84,14 @@ const App: React.FC = () => {
         }, 100);
 
         const lastReelStopCommandTime = (REEL_COUNT - 1) * REEL_STOP_DELAY_MS;
-        const totalAnimationTime = lastReelStopCommandTime + REEL_TRANSITION_MS;
+        // Precisely calculate the total animation time to enable the next spin right after the last reel stops.
+        // It includes the initial delay before stopping (100ms), the staggered stop time for the last reel, and its transition duration.
+        const totalAnimationTime = 100 + lastReelStopCommandTime + REEL_TRANSITION_MS;
         
         setTimeout(() => {
             checkResult(newReels);
             setIsSpinning(false);
-        }, totalAnimationTime + 500);
+        }, totalAnimationTime);
     }, 200);
   };
 

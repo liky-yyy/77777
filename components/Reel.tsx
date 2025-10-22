@@ -6,14 +6,14 @@ interface ReelProps {
   transitionDuration: number;
 }
 
-// A constant to hold a vertical strip of numbers 0-9, repeated for a seamless loop
-const NUMBER_STRIP = [0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,9];
+// Optimized: Reduced the strip length by half to improve rendering performance.
+const NUMBER_STRIP = [0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,9];
 const NUMBER_HEIGHT_REM = 10; // Corresponds to h-40, the height of the number elements
 
 const Reel: React.FC<ReelProps> = ({ finalNumber, isSpinning, transitionDuration }) => {
   // Calculate the final resting position of the number strip.
-  // We land on a number in the third set of 0-9 for a good visual buffer.
-  const finalIndex = (NUMBER_STRIP.length - 20) + finalNumber;
+  // We land on a number in the second set of 0-9 for a good visual buffer.
+  const finalIndex = (NUMBER_STRIP.length - 10) + finalNumber;
   const finalTranslateY = `-${finalIndex * NUMBER_HEIGHT_REM}rem`;
 
   // During spinning, we translate to a very large negative value to simulate spinning upwards.

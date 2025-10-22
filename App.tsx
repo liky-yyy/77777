@@ -2,6 +2,8 @@ import React, { useState, useCallback } from 'react';
 import Reel from './components/Reel';
 import Lever from './components/Lever';
 import ResultModal from './components/ResultModal';
+// import AdBanner from './components/AdBanner';
+// import AdInterstitial from './components/AdInterstitial';
 import type { GameResult, Rank } from './types';
 
 const REEL_COUNT = 5;
@@ -22,6 +24,8 @@ const App: React.FC = () => {
   const [result, setResult] = useState<GameResult | null>(null);
   const [isLeverPulled, setIsLeverPulled] = useState(false);
   const [points, setPoints] = useState<number>(0);
+  // const [spinCount, setSpinCount] = useState<number>(0);
+  // const [showInterstitialAd, setShowInterstitialAd] = useState<boolean>(false);
 
   const checkResult = useCallback((finalReels: number[]) => {
     const counts: { [key: number]: number } = {};
@@ -64,6 +68,7 @@ const App: React.FC = () => {
 
     setIsSpinning(true);
     setResult(null);
+    // setSpinCount(prev => prev + 1);
 
     const newReels = Array.from({ length: REEL_COUNT }, () => Math.floor(Math.random() * 10));
     
@@ -84,8 +89,6 @@ const App: React.FC = () => {
         }, 100);
 
         const lastReelStopCommandTime = (REEL_COUNT - 1) * REEL_STOP_DELAY_MS;
-        // Precisely calculate the total animation time to enable the next spin right after the last reel stops.
-        // It includes the initial delay before stopping (100ms), the staggered stop time for the last reel, and its transition duration.
         const totalAnimationTime = 100 + lastReelStopCommandTime + REEL_TRANSITION_MS;
         
         setTimeout(() => {
@@ -93,6 +96,14 @@ const App: React.FC = () => {
             setIsSpinning(false);
         }, totalAnimationTime);
     }, 200);
+  };
+  
+  const handleCloseResultModal = () => {
+    setResult(null);
+    // 3번 스핀할 때마다 전면 광고 표시 (비활성화)
+    // if (spinCount % 3 === 0) {
+    //   setShowInterstitialAd(true);
+    // }
   };
 
   const prizeInfo = [
@@ -112,7 +123,6 @@ const App: React.FC = () => {
         .animate-glow { animation: glow 3s ease-in-out infinite; }
       `}</style>
       
-      {/* Points Display */}
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 text-right bg-black/40 p-3 sm:p-4 rounded-lg shadow-lg border border-gray-700 z-10">
         <h2 className="text-sm sm:text-base font-bold text-yellow-400 tracking-widest uppercase">Points</h2>
         <p className="text-2xl sm:text-4xl font-black text-white">{points.toLocaleString()}<span className="text-lg sm:text-2xl ml-1 text-gray-400">원</span></p>
@@ -153,9 +163,15 @@ const App: React.FC = () => {
                   ))}
               </ul>
           </aside>
+          
+          {/* 배너 광고 비활성화 */}
+          {/* <AdBanner /> */}
       </div>
 
-      <ResultModal result={result} onClose={() => setResult(null)} />
+      <ResultModal result={result} onClose={handleCloseResultModal} />
+      
+      {/* 전면 광고 비활성화 */}
+      {/* {showInterstitialAd && <AdInterstitial onClose={() => setShowInterstitialAd(false)} />} */}
     </div>
   );
 };
